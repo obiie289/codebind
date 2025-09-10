@@ -1,6 +1,6 @@
 package com.example.candy
 
-fun add (a:Int, b:Int) = a + b
+fun add (a:Int, b:Int) = a * b
 
 fun main() {
 
