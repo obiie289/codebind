@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
             CandyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "World",
+                        name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -41,6 +41,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .border(2.dp, Color.Green)
             .padding(8.dp)
+
 
 
     )
