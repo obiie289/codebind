@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "candy"
 include(":app")
+include(":app:w03")
+include(":w03")
