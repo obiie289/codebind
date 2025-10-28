@@ -1,5 +1,10 @@
-**First commit**
+<h1> **First commit** </h1>
+
+
+
 기본 Compose 앱 프로젝트 초기화와 브랜치 실습을 완료했습니다.
+
+
 작업 내용
 	•	Android 프로젝트 생성 및 기본 UI 렌더링(Text “Hello World”). 
 	•	feature 브랜치 생성/전환, 브랜치에서 import 정리 후 main에 병합 테스트. 
