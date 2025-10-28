@@ -6,6 +6,8 @@ Jetpack Compose로 프로필 카드(ProfileCard)와 메시지 카드(MessageCard
 결과 화면 
 
 <img width="424" height="939" alt="스크린샷 2025-10-29 02 53 22" src="https://github.com/user-attachments/assets/f4e5c0bf-b83a-40a4-8016-eeaff784c682" />
+
+
 ## 핵심 구성
 	•	Activity: `MainActivity`에서 `HomeScreen()` 렌더링.
 	•	데이터 모델: `Profile(name, intro)`, `Message(name, msg)`.
