@@ -7,6 +7,13 @@
 * 지금 시작하고, 나중에 완벽하게 할것
 * 미래의 나를 위해 할 것
 
+
+
+
+
+
+### intermediate results 
+
 ### w01 ~02 
   - <https://github.com/obiie289/codebind/tree/main/app/src/main/java/com/example/candy>
 
