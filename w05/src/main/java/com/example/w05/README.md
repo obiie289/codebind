@@ -18,11 +18,13 @@
 
    ### 초기 화면 
 
-   
+   <img width="425" height="938" alt="스크린샷 2025-10-29 03 15 45" src="https://github.com/user-attachments/assets/7d37b328-993d-4e25-8a89-bc8a0985cfc9" />
+
 
 
    ### 이밴트 
 
+<img width="428" height="917" alt="스크린샷 2025-10-29 03 15 17" src="https://github.com/user-attachments/assets/9163fde9-396d-46ec-bb17-518160ecf242" />
 
   
 
