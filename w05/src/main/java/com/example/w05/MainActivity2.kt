@@ -120,20 +120,34 @@ fun CounterApp(count: MutableState<Int>) {
 
 @Composable
 fun StopWatchApp() {
-    // 1. 상태(State)와 로직(LaunchedEffect)은 상위 컴포저블에 둔다.
-    var timeInMillis by remember { mutableStateOf(12345L) }
+    // 1. 상태(State)
+    var timeInMillis by remember { mutableStateOf(0L) }
     var isRunning by remember { mutableStateOf(false) }
 
+    // 11:11:11(분:초:센티초) = 11분 11초
+    val targetMillis = 11 * 60 * 1000L + 11 * 1000L
+
+    // 이벤트가 이미 한 번 떴는지 여부
+    var eventTriggered by remember { mutableStateOf(false) }
+
+    // 2. 타이머 루프
     LaunchedEffect(key1 = isRunning) {
         if (isRunning) {
             while (true) {
                 delay(10L)
                 timeInMillis += 10L
+
+                // 목표 시간 도달 체크 (한 번만 트리거)
+                if (!eventTriggered && timeInMillis >= targetMillis) {
+                    eventTriggered = true
+                    // 여기서 진동/사운드/알림 등 사이드이펙트를 추가해도 됨
+                    // ex) playSound(), vibrate(), showNotification() 등
+                }
             }
         }
     }
 
-    // 2. 하위 컴포저블을 호출하며, 상태와 이벤트 핸들러(람다)를 전달합니다.
+    // 3. 화면
     StopwatchScreen(
         timeInMillis = timeInMillis,
         onStartClick = { isRunning = true },
@@ -141,41 +155,62 @@ fun StopWatchApp() {
         onResetClick = {
             isRunning = false
             timeInMillis = 0L
-        }
+            eventTriggered = false // 리셋 시 이벤트 재활성화
+        },
+        eventTriggered = eventTriggered,
+        onDismissEvent = { eventTriggered = false } // 다이얼로그 닫기
     )
 }
 
-// 하위 컴포저블: UI 표시 및 이벤트 전달 (Dumb/Stateless Component)
+// 하위 컴포저블: UI + 이벤트 다이얼로그
 @Composable
 fun StopwatchScreen(
-    timeInMillis: Long, // 3. 상태를 직접 소유하지 않고 파라미터로 받습니다.
-    onStartClick: () -> Unit, // 4. 이벤트가 발생했을 때 호출할 람다 함수를 받습니다.
+    timeInMillis: Long,
+    onStartClick: () -> Unit,
     onStopClick: () -> Unit,
-    onResetClick: () -> Unit
+    onResetClick: () -> Unit,
+    eventTriggered: Boolean,
+    onDismissEvent: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = formatTime(timeInMillis), // 전달받은 상태로 UI를 그립니다.
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        Row(
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            // 5. 버튼 클릭 시, 상태를 직접 변경하는 대신 전달받은 람다 함수를 호출합니다.
-            Button(onClick = onStartClick) { Text("Start") }
-            Spacer(modifier = Modifier.width(16.dp))
-            Button(onClick = onStopClick) { Text("Stop") }
-            Spacer(modifier = Modifier.width(16.dp))
-            Button(onClick = onResetClick) { Text("Reset") }
+            Text(
+                text = formatTime(timeInMillis),
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row {
+                Button(onClick = onStartClick) { Text("Start") }
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(onClick = onStopClick) { Text("Stop") }
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(onClick = onResetClick) { Text("Reset") }
+            }
+        }
+
+        // 11:11:11 이벤트 다이얼로그
+        if (eventTriggered) {
+            androidx.compose.material3.AlertDialog(
+                onDismissRequest = onDismissEvent,
+                title = { Text("🎉 11:11 이벤트") },
+                text = { Text("축하합니다! 스톱워치가 11:11:11에 도달했습니다.") },
+                confirmButton = {
+                    Button(onClick = onDismissEvent) { Text("확인") }
+                }
+            )
         }
     }
 }
+
 
 // 시간을 MM:SS:ss 형식으로 변환하는 헬퍼 함수
 private fun formatTime(timeInMillis: Long): String {
