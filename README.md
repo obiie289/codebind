@@ -8,7 +8,7 @@
 * 미래의 나를 위해 할 것
 
 ### w01 ~02 
-<app/src/main/java/com/example/candy>
+<https://github.com/obiie289/codebind/tree/main/app/src/main/java/com/example/candy>
 
 ### w03 
 <>
