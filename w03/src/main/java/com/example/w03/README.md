@@ -14,7 +14,7 @@
 	•	`Image(R.drawable.hyi)` – 300dp 크기, 16dp 패딩.
 	•	`Text("위치: GONE")`, `Text("전화번호: 010-1234-5678")` – 중간 제목 스타일(headlineMedium).
 
-'''
+``` 
   @Composable
 fun HomeScreen() {
     Column(
@@ -34,4 +34,4 @@ fun HomeScreen() {
         Text(text = "전화번호: 010-1234-5678", style = MaterialTheme.typography.headlineMedium)
     }
 }
-'''
+```
