@@ -16,7 +16,7 @@ Jetpack Compose로 프로필 카드(ProfileCard)와 메시지 카드(MessageCard
 	•	버튼 열: `Column(horizontalAlignment = Alignment.CenterHorizontally)`로 상단 고정 느낌 구현.
 
   ## 코드 요소 
-` 
+```
   @Composable
 fun ProfileCard( Profile) {
     Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -33,8 +33,7 @@ fun ProfileCard( Profile) {
         }
     }
 }
-` 
-` 
+
 @Composable
 fun MessageCard(me: Message) {
     Card(
@@ -49,7 +48,7 @@ fun MessageCard(me: Message) {
         }
     }
 }
-`
+```
 ## 미리보기
 	•	다크 모드 프리뷰 제공: `PreviewProfileCard`, `PreviewMessageCard`에서 `uiMode = UI_MODE_NIGHT_YES`.
 
