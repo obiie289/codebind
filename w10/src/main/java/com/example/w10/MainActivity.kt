@@ -5,13 +5,22 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -226,41 +235,83 @@ fun NavigationSearchDropdown() {
         )
     }
 }
-@Preview(showBackground = true,name = "5. navigation Drawer")
+@Preview(showBackground = true, name = "5. Navigation Drawer")
 @Composable
 fun NavigationDrawer() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val Scope = rememberCoroutineScope()
-
+    val scope = rememberCoroutineScope()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Column(Modifier.padding(16.dp)){
-                    Text("드로어 메뉴",style = MaterialTheme.typography.titleLarge)
+                Column(Modifier.padding(16.dp)) {
+                    Text("드로어 메뉴", style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.height(8.dp))
-                    Text("메뉴1")
-                    Text("메뉴2")
+                    Text("메뉴 1")
+                    Text("메뉴 2")
                 }
             }
         }
-    ){
+    ) {
         BaseAppScaffold(
             title = "Drawer 예제",
             navigationIcon = {
-                IconButton(onClick = {Scope.launch {drawerState.open()}}){
-                    Icon(Icons.Default.Menu ,contentDescription = "메뉴")
+                IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                    Icon(Icons.Default.Menu, contentDescription = "메뉴")
                 }
             }
-        ){
-            padding ->Box(Modifier.padding(padding).fillMaxSize(),contentAlignment = Alignment.Center){
+        ) { padding ->
+            Box(Modifier.padding(padding).fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("Navigation Drawer 예제 화면")
-             }
+            }
         }
     }
 }
 
+    @OptIn(ExperimentalFoundationApi::class)
+    @Preview(showBackground = true, name = "6. Pager + 목록")
+    @Composable
+    fun HorizontalPagerExample() {
+        val pagerState = rememberPagerState(pageCount = { 3 })
+
+        // 🔹 페이지별로 표시할 아이템을 미리 준비
+        val pageItems = listOf(
+            (1..25).map { "페이지 1 - 아이템 #$it" },
+            (1..25).map { "페이지 2 - 아이템 #$it" },
+            (1..25).map { "페이지 3 - 아이템 #$it" }
+        )
+
+        com.example.w10.BaseAppScaffold(title = "Pager 예제") { padding ->
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.padding(padding)
+            ) { page ->
+                // 🔹 page 인덱스에 따라 해당 페이지의 아이템 목록 선택
+                val itemsForPage = pageItems[page]
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(itemsForPage) { item ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Text(item)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 
