@@ -4,7 +4,7 @@
 
 일반적인 앱(카카오톡, 유튜브 등)에서 볼 수 있는 UI 패턴으로, 사용자가 탭을 클릭하면 해당 페이지로 이동하고, 화면을 스와이프하면 상단 탭이 자동으로 변경되는 양방향 동기화 기능을 구현했습니다.
 
-##주요 변경 사항 (TabRow 추가)
+## 주요 변경 사항 (TabRow 추가)
 기존의 단순 페이저(목록만 스와이프되는 형태) 코드에서 다음과 같은 기능을 추가하여 업그레이드했습니다.
 
 레이아웃 구조 변경: Column을 사용하여 화면 상단에 탭(TabRow)을 배치하고, 하단에 페이저(HorizontalPager)를 배치했습니다.
@@ -15,7 +15,7 @@
 
 ### 주요 코드 
 
-####1. 상태 선언 및 준비
+#### 1. 상태 선언 및 준비
 ```kt
 val pagerState = rememberPagerState(pageCount = { 3 })
 
@@ -25,7 +25,7 @@ val coroutineScope = rememberCoroutineScope()
 // 탭에 표시할 제목 리스트
 val tabTitles = listOf("전체", "인기", "추천")
 ```
-####2.TabRow (상단 탭) 구현
+#### 2.TabRow (상단 탭) 구현
 ```kt
 TabRow(
     // 중요: 현재 페이저의 페이지 인덱스를 탭의 선택 상태와 동기화
@@ -46,7 +46,7 @@ TabRow(
     }
 }
 ```
-####3. HorizontalPager (하단 목록) 구현
+#### 3. HorizontalPager (하단 목록) 구현
 ```kt
 HorizontalPager(
     state = pagerState,
