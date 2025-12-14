@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -34,9 +33,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -60,29 +58,30 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CandyTheme {
-                Scaffold(
-                    topBar = {
-                        CenterAlignedTopAppBar(
-                            title = { Text("기본 TopAppBar") },
-                            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        )
-                    }
-                ) { innerPadding ->
-                    Box(
-                        modifier = Modifier
-                            .padding(innerPadding).fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("기본 TopAppBar 화면")
-                    }
+                HorizontalPagerExample() // 스와이프 , 탭 클릭 테스트
+//                Scaffold(
+//                    topBar = {
+//                        CenterAlignedTopAppBar(
+//                            title = { Text("기본 TopAppBar") },
+//                            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+//                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+//                                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+//                            )
+//                        )
+//                    }
+//              ) { innerPadding ->
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(innerPadding).fillMaxSize(),
+//                        contentAlignment = Alignment.Center
+//                    ) {
+//                        Text("기본 TopAppBar 화면")
+//                    }
                 }
             }
         }
     }
-}
+//}
 
 @Preview(showBackground = true, name = "1. 기본 TopAppBar 화면")
 @Composable
@@ -270,10 +269,14 @@ fun NavigationDrawer() {
 }
 
     @OptIn(ExperimentalFoundationApi::class)
-    @Preview(showBackground = true, name = "6. Pager + 목록")
+    @Preview(showBackground = true, name = "6. Pager + 목록 + 탭") // 탭 추가
     @Composable
     fun HorizontalPagerExample() {
         val pagerState = rememberPagerState(pageCount = { 3 })
+
+        val coroutineScope = rememberCoroutineScope() // 탭 클릭 하면 페이지 이동  스코프 추가
+
+        val tabTitles = listOf("전체", "인기", "추천") //. 탭 제목 릿스트
 
         // 🔹 페이지별로 표시할 아이템을 미리 준비
         val pageItems = listOf(
@@ -283,35 +286,70 @@ fun NavigationDrawer() {
         )
 
         com.example.w10.BaseAppScaffold(title = "Pager 예제") { padding ->
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.padding(padding)
-            ) { page ->
-                // 🔹 page 인덱스에 따라 해당 페이지의 아이템 목록 선택
-                val itemsForPage = pageItems[page]
 
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp)
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
+                // 상단 탭 영역 tabrow 추가
+                androidx.compose.material3.TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    indicator = { tabPositions ->
+
+                        androidx.compose.material3.TabRowDefaults.SecondaryIndicator(
+                            Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
+                        )
+                    }
                 ) {
-                    items(itemsForPage) { item ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.CheckCircle,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(Modifier.width(12.dp))
-                            Text(item)
+                    tabTitles.forEachIndexed { index, title ->
+                        androidx.compose.material3.Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                //  탭 클릭 해당 페이지 자연스럽게 이동
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            text = { Text(text = title) }
+                        )
+                    }
+                }
+
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.weight(1f)
+                ) { page ->
+                    // 🔹 page 인덱스에 따라 해당 페이지의 아이템 목록 선택
+                    val itemsForPage = pageItems[page]
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp)
+                    ) {
+                        items(itemsForPage) { item ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircle,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Text(item)
+                            }
                         }
                     }
                 }
             }
         }
     }
+
+
 
 
 
