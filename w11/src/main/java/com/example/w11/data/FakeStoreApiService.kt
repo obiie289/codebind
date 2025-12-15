@@ -11,7 +11,7 @@ interface FakeStoreApiService {
     suspend fun getProducts(): List<Product>
 }
 
-// 2. Retrofit 인스턴스 (실제 통신을 담당하는 기계) - 이 부분이 빠져서 에러가 난 겁니다!
+// 2. Retrofit 인스턴스
 object RetrofitInstance {
     private const val BASE_URL = "https://fakestoreapi.com/"
 
