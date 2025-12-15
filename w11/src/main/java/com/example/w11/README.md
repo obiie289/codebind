@@ -25,8 +25,8 @@ Fake Store REST API를 활용하여 상품 데이터를 불러오고, 사용자 
 ---
 
 ##  주요 코드 및 로직
-<https://github.com/obiie289/codebind/blob/main/w11/src/main/java/com/example/w11/ui/ProductListScreen.kt>
 ### 1. `ProductListScreen.kt` (UI 구성)
+<https://github.com/obiie289/codebind/blob/main/w11/src/main/java/com/example/w11/ui/ProductListScreen.kt>
 - **`LazyVerticalGrid`**: `GridCells.Fixed(2)`를 사용하여 반응형 격자 구조 구현.
 - **`LazyRow` & `FilterChip`**: 상단 카테고리 바 구현 및 선택 상태(`selected`) 시각화.
 - **Category Mapping Logic**: `Pair("electronics", "전자제품")` 등을 활용해 서버 요청용 영어 이름과 화면 표시용 한글 이름을 매핑.
