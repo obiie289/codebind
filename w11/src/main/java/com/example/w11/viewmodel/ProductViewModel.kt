@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-// 삭제한 파일에 있던 내용이 여기로 들어옴
 sealed interface ProductUiState {
     object Loading : ProductUiState
     data class Success(val products: List<Product>) : ProductUiState
@@ -22,6 +21,8 @@ class ProductViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<ProductUiState>(ProductUiState.Loading)
     val uiState: StateFlow<ProductUiState> = _uiState.asStateFlow()
 
+    private var allProducts: List<Product> = emptyList()
+
     init {
         fetchProducts()
     }
@@ -30,13 +31,28 @@ class ProductViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = ProductUiState.Loading
             try {
-                // 데이터 가져오기 시도
+
                 val response = RetrofitInstance.api.getProducts()
+                allProducts = response
                 _uiState.value = ProductUiState.Success(response)
             } catch (e: Exception) {
                 // 에러 발생 시
                 _uiState.value = ProductUiState.Error("에러 발생: ${e.localizedMessage}")
             }
+        }
+    }
+    fun updateCategory(category : String) {
+
+        if(_uiState.value !is ProductUiState.Success) return
+
+        if(category == "All") {
+            _uiState.value = ProductUiState.Success(allProducts)
+        }
+        else {
+            val filteredList = allProducts.filter {
+                it.category == category.lowercase()
+            }
+            _uiState.value = ProductUiState.Success(filteredList)
         }
     }
 }
