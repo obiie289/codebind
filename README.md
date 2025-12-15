@@ -1,4 +1,4 @@
-# mobileApp
+# MobileApp - 박수빈 obiie289
 
 ## 모바일 앱 실습
 
